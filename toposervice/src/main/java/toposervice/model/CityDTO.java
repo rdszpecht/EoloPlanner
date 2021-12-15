@@ -3,19 +3,19 @@ package toposervice.model;
 public class CityDTO {
 	
 	private String id;
-	private String landScape;
+	private String landscape;
 	
 	public CityDTO(City city) {
 		this.id = city.getName();
-		this.landScape = city.getLandscape().getName();
+		this.landscape = city.getLandscape().getName();
 	}
 
 	public String getId() {
 		return id;
 	}
 
-	public String getLandScape() {
-		return landScape;
+	public String getLandscape() {
+		return landscape;
 	}
 	
 	
