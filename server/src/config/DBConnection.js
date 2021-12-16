@@ -3,7 +3,7 @@ import {Sequelize, Model, DataTypes} from 'sequelize';
 
 export async function initDatabase(sequelize){
     models.EoloPlant.init({
-        city:  {type: DataTypes.STRING, unique: true},
+        city:  {type: DataTypes.STRING},
         planning: DataTypes.STRING
     }, { sequelize, modelName: 'eoloPlant' });
 

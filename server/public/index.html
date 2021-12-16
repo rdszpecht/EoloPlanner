@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $.post('http://localhost:3000/graphql', {
+            "query": "query {GetEoloPlants{id,city,planning}}"
+        }, (res) => {
+            res.data.GetEoloPlants.forEach(element => {
+                addEolicPlant(element);
+            });
+        })
+        function addEolicPlant(element){
+            $('#EolicPlantsDiv').append("ID Planta eolica: " + element.id + "<br />Ciudad: " + element.city + "<br />Plan: " + element.planning + "<br /><br /><br />");
+        }
+
+        function createEoloPlant() {
+            $('#create').prop("disabled",true);
+            $('#spinner').css('visibility','visible');
+            var city = document.plant_form.city.value;
+            var query = "mutation {NewEoloPlant(city: \"" + city + "\"){id,city,planning}}";
+            $.post('http://localhost:3000/graphql', {
+            "query": query
+            }, (res) => {
+                if(res.errors == undefined){
+                    console.log(res);
+                    addEolicPlant(res.data.NewEoloPlant)
+                } else {
+                    alert(res.errors[0].message);
+                }
+                $('#create').prop("disabled",false);
+            $('#spinner').css('visibility','hidden');
+            })
+            return false
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Plantas eólicas</h1>
+    <div id="EolicPlantsDiv"></div>
+
+    <p>Nueva planta eólica:</p>
+    <form name="plant_form">
+        <div>
+            <label>Ciudad: </label>
+            <input id="city" name="city" type="text">
+        </div>
+        <br>
+        <div>
+            <input type="submit" value="Crear" id="create" onclick="return createEoloPlant(this)">
+            <img id="spinner" style="visibility: hidden;" src='https://powerusers.microsoft.com/t5/image/serverpage/image-id/118082i204C32E01666789C/image-size/large?v=v2&px=999' width="30" height = "30">
+        </div>
+        
+    </form>
+</body>
+
+</html>

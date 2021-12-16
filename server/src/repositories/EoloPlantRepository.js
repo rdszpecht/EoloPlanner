@@ -5,6 +5,10 @@ export function setModel(model){
     console.log("EOLOPLANT: " + EoloPlant);
 }
 
+export async function findAll(){
+    return await EoloPlant.findAll();
+}
+
 export async function findByCity(city){
     var result = await EoloPlant.findOne({ where: {city}});
     return result.dataValues;
