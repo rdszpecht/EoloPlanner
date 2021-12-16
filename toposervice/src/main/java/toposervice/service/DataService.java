@@ -1,5 +1,7 @@
 package toposervice.service;
 
+import java.util.Random;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,13 @@ public class DataService {
 		Mono.just(flat).flatMap(this.landscapeRepository::save).block();
 		Mono.just(mountain).flatMap(this.landscapeRepository::save).block();
 		
-		Mono.just(new City("Madrid", flat)).flatMap(this.cityRepository::save).block();
-		Mono.just(new City("Gijon", mountain)).flatMap(this.cityRepository::save).block();
-		Mono.just(new City("Santander", mountain)).flatMap(this.cityRepository::save).block();
-		Mono.just(new City("Cordoba", flat)).flatMap(this.cityRepository::save).block();
+		
+		Landscape[] landscapes = new Landscape[] {flat, mountain};
+		
+		String[] cities = new String[]{"Madrid", "Barcelona", "Jaca", "Andorra", "Valencia", "Sevilla", "Zaragoza", "Málaga", "Murcia", "Palma",
+		"Bilbao", "Alicante", "Córdoba", "Valladolid", "Vigo", "Gijón", "Vitoria"};
+		for(String city: cities) {
+			Mono.just(new City(city, landscapes[new Random().nextInt(landscapes.length)])).flatMap(this.cityRepository::save).block();
+		}
 	}
 }

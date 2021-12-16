@@ -8,5 +8,5 @@ import toposervice.model.City;
 
 @Repository
 public interface CityRepository extends ReactiveCrudRepository<City, String> {
-	Flux<City> findByName(String name);
+	Flux<City> findByNameIgnoreCase(String name);
 }
