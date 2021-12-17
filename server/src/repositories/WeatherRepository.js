@@ -1,4 +1,4 @@
-import * as grpc from "grpc"
+import * as grpc from "@grpc/grpc-js"
 import { weatherService } from "../interface.js"
 
 var client = new weatherService('localhost:9090', grpc.credentials.createInsecure());
