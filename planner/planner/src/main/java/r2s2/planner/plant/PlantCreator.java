@@ -1,14 +1,80 @@
 package r2s2.planner.plant;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import r2s2.planner.dataConsumers.TopologicalConsumer;
+import r2s2.planner.dataConsumers.WeatherConsumer;
+import r2s2.planner.queueHandlers.Sender;
 
 @Component
 public class PlantCreator {
 
-	public void newPlant() {
-		// To do
-		// Aquí vendría el listener cuando le llegue una petición nueva, y debería ir a otras dos clases que en asincrono
-		// pidan datos a los servicios correspondientes, los junten, y los envien al "Sender"... O algo así, me he rallao
+	@Autowired
+	private TopologicalConsumer topologicalConsumer;
+	
+	@Autowired
+	private WeatherConsumer weatherConsumer;
+	
+	@Autowired
+	private Sender sender;
+	
+	private String plant;
+	private int progress;
+	
+	public void newPlant(String city) {		
+		progress = 0;
+		
+		if (Character.toLowerCase(city.charAt(0)) <= 'm') {
+			plant = city.toLowerCase();
+		}else {
+			plant = city.toUpperCase();
+		}
+				
+		CompletableFuture<String> topologicalData = topologicalConsumer.getTopologicalData(city);		
+		CompletableFuture<Void> topoFuture = topologicalData
+				.thenRun(() -> {
+					try {
+						plant += "-" + topologicalData.get();
+						progress += 25;
+						sender.sendProgress(progress);
+					} catch (Exception  e) {						
+						e.printStackTrace();
+					}
+				});
+				
+		
+		CompletableFuture<String> weatherData = weatherConsumer.getWeatherData(city);
+		CompletableFuture<Void> weatherFuture = weatherData
+				.thenRun(() -> {
+					try {
+						plant += "-" + weatherData.get();		
+						progress += 25;
+						sender.sendProgress(progress);		
+					} catch (Exception  e) {						
+						e.printStackTrace();
+					}				
+				});
+		
+		try {
+			topoFuture.get();
+			weatherFuture.get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		progress += 25;
+		sender.sendProgress(progress);
+		
+		if(CompletableFuture.allOf(topologicalData, weatherData).isDone()) {
+			sender.sendPlant(plant);
+			progress += 25;
+			sender.sendProgress(progress);
+		} 
+		
 	}
 	
 }
