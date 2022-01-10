@@ -28,11 +28,7 @@ public class PlantCreator {
 	public void newPlant(String city) {		
 		progress = 0;
 		
-		if (Character.toLowerCase(city.charAt(0)) <= 'm') {
-			plant = city.toLowerCase();
-		}else {
-			plant = city.toUpperCase();
-		}
+		plant = city;
 				
 		CompletableFuture<String> topologicalData = topologicalConsumer.getTopologicalData(city);		
 		CompletableFuture<Void> topoFuture = topologicalData
@@ -69,11 +65,17 @@ public class PlantCreator {
 		progress += 25;
 		sender.sendProgress(progress);
 		
-		if(CompletableFuture.allOf(topologicalData, weatherData).isDone()) {
+		CompletableFuture.allOf(topologicalData, weatherData).thenRun(() -> {
+			if (Character.toLowerCase(city.charAt(0)) <= 'm') {
+				plant = plant.toLowerCase();
+			}else {
+				plant = plant.toUpperCase();
+			}
+			
 			sender.sendPlant(plant);
 			progress += 25;
-			sender.sendProgress(progress);
-		} 
+			sender.sendProgress(progress);	
+		});
 		
 	}
 	

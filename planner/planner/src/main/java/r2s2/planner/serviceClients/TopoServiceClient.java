@@ -2,7 +2,6 @@ package r2s2.planner.serviceClients;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestTemplate;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
