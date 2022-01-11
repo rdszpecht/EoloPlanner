@@ -13,3 +13,4 @@ function exec(serviceName, command) {
 exec('weatherservice', 'npm install');
 exec('toposervice', 'mvn install');
 exec('server', 'npm install');
+exec('planner','mvn install');
