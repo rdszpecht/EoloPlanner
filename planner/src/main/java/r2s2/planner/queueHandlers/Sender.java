@@ -12,13 +12,11 @@ public class Sender {
 	
 
 	public void sendProgress(int progress) {
-				
 		rabbitTemplate.convertAndSend("progress", progress);
 	}
 	
 	public void sendPlant(String plant) {
-		
-		rabbitTemplate.convertAndSend("createPlant", plant);
+		rabbitTemplate.convertAndSend("responsePlant", plant);
 	}
 	
 }
