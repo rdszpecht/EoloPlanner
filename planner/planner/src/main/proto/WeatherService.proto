@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_package = "es.grpc";
+option java_multiple_files = true;
+
+
+package es.grpc;
+
+service WeatherService {
+    rpc GetWeather(GetWeatherRequest) returns (Weather);
+}
+
+message GetWeatherRequest {
+string city = 1;
+}
+
+message Weather {
+string city = 1;
+string weather = 2;
+}

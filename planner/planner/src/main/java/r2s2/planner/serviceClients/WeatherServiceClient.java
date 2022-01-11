@@ -4,8 +4,8 @@ import org.springframework.stereotype.Controller;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 
 import es.grpc.Weather;
-import es.grpc.GetWeatherRequest;
 import es.grpc.WeatherServiceGrpc.WeatherServiceBlockingStub;
+import es.grpc.GetWeatherRequest;
 
 @Controller
 public class WeatherServiceClient {
@@ -14,14 +14,15 @@ public class WeatherServiceClient {
 	private WeatherServiceBlockingStub client;
 	
 	public String getWeather(String city) {
-		WeatherRequest request = WeatherRequest.newBuilder()
+		GetWeatherRequest request = GetWeatherRequest.newBuilder()
 	            .setCity(city)
 	            .build();
-	        
-		WeatherResponse response = client.weather(request);
+	    
 		
-
-	    return response;
+		
+		Weather response = client.getWeather(request);
+		
+	    return response.getWeather();
 
 	}
 }
