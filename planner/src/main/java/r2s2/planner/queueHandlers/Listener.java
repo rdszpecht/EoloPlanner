@@ -14,6 +14,7 @@ public class Listener {
 	
 	@RabbitListener(id = "newPlant", queues = "createPlant", ackMode = "AUTO")
 	public void createEolicPlant(String message) {
+		System.out.println("EEEEEEE RABBIT");
 		plantCreator.newPlant(message);
 		
 	}
