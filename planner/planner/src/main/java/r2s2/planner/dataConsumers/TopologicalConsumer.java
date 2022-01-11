@@ -17,11 +17,8 @@ public class TopologicalConsumer {
 	
 	@Async
 	public CompletableFuture<String> getTopologicalData(String city) {
-		CompletableFuture<String> response = new CompletableFuture();
+		return CompletableFuture.completedFuture(topoServiceClient.getTopographicDetail(city));
 		
-		//		topoServiceClient.getTopographicDetail(city);
-		
-		return response;
 	}
 	
 }

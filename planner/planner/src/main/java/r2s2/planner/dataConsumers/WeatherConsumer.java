@@ -16,7 +16,7 @@ public class WeatherConsumer {
 	
 	@Async
 	public CompletableFuture<String> getWeatherData(String city) {
-		return completedFuture(weatherServiceClient.getWeather(city));
+		return CompletableFuture.completedFuture(weatherServiceClient.getWeather(city));
 	}
 	
 }

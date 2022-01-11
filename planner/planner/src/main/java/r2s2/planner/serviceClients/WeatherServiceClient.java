@@ -19,7 +19,6 @@ public class WeatherServiceClient {
 	            .build();
 	    
 		
-		
 		Weather response = client.getWeather(request);
 		
 	    return response.getWeather();
