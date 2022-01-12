@@ -15,8 +15,17 @@ public class Application {
 	}
 
 	@Bean
-	public Queue myQueue() {
-    	return new Queue("messages", false);
+	public Queue citiesQueue() {
+    	return new Queue("cities", false);
 	}
 	
+	@Bean
+	public Queue plantsQueue() {
+    	return new Queue("plants", false);
+	}
+	
+	@Bean
+	public Queue progressesQueue() {
+    	return new Queue("progresses", false);
+	}	
 }
