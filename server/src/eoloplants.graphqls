@@ -1,0 +1,14 @@
+type Query {
+GetEoloPlants: [EoloPlant]
+
+}
+
+type Mutation {
+NewEoloPlant(city: String): EoloPlant
+}
+
+type EoloPlant  {
+    id: ID,
+    city: String,
+    planning: String
+}

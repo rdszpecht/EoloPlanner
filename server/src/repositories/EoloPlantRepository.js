@@ -1,9 +1,4 @@
-var EoloPlant;
-
-export function setModel(model){
-    EoloPlant = model;
-    console.log("EOLOPLANT: " + EoloPlant);
-}
+import { EoloPlant } from '../models/EoloPlant.js'
 
 export async function findAll(){
     return await EoloPlant.findAll();
