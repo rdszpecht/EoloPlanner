@@ -8,7 +8,9 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 import eoloPlantController from './controller/EoloPlantController.js';
-import * as db from './config/DBConnection.js'
+import * as db from './config/DBConnection.js';
+
+//import './queueHanderls/consumer.js';
 
 var sequelize = db.sequelize;
 await db.initDatabase(sequelize);
