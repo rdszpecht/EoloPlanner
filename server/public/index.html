@@ -3,34 +3,60 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        $.post('http://localhost:3000/graphql', {
+        
+        getPlants();
+        function getPlants(){
+            $('#EolicPlantsDiv').empty();
+            $.post('http://localhost:3000/graphql', {
             "query": "query {GetEoloPlants{id,city,planning}}"
-        }, (res) => {
+         }, (res) => {
             res.data.GetEoloPlants.forEach(element => {
                 addEolicPlant(element);
             });
         })
+        }
+
         function addEolicPlant(element){
             $('#EolicPlantsDiv').append("ID Planta eolica: " + element.id + "<br />Ciudad: " + element.city + "<br />Plan: " + element.planning + "<br /><br /><br />");
         }
+        
+        function openSocketConnection(city){
+            var socket = new WebSocket("ws://localhost:3000/notifications");
+            socket.onopen = function(event){
+                socket.send(city);
+            }
+            socket.onmessage = onPlantReceived;
+        }
+
+        function onPlantReceived(event) {
+                let data = JSON.parse(event.data);
+                if(data.progress < 100){
+                    $('#progress').text(data.progress + "%");
+                } else if(data.progress == 100){
+                    $('#create').prop("disabled",false);
+                    $('#spinner').css('visibility','hidden');
+                    $('#progress').text("");
+                    $('#city').val("");
+                    addEolicPlant(data);
+                }
+            }
 
         function createEoloPlant() {
             $('#create').prop("disabled",true);
             $('#spinner').css('visibility','visible');
             var city = document.plant_form.city.value;
             var query = "mutation {NewEoloPlant(city: \"" + city + "\"){id,city,planning}}";
+            openSocketConnection(city)
             $.post('http://localhost:3000/graphql', {
             "query": query
             }, (res) => {
                 if(res.errors == undefined){
-                    console.log(res);
-                    addEolicPlant(res.data.NewEoloPlant)
+                    
                 } else {
                     alert(res.errors[0].message);
                 }
-                $('#create').prop("disabled",false);
-            $('#spinner').css('visibility','hidden');
             })
+            
             return false
         }
     </script>
@@ -49,7 +75,9 @@
         <br>
         <div>
             <input type="submit" value="Crear" id="create" onclick="return createEoloPlant(this)">
+            <span id="progress"></span>
             <img id="spinner" style="visibility: hidden;" src='/spinner.gif' width="30" height = "30">
+            
         </div>
         
     </form>

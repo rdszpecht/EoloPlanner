@@ -24,7 +24,7 @@ public class Listener {
 	@Autowired
 	EoloPlantService eoloPlantService;
 	
-	@RabbitListener(id = "newPlant", queues = "eoloplantCreationRequestsQueue", ackMode = "AUTO")
+	@RabbitListener(id = "newPlant", queues = "eoloplantCreationRequests", ackMode = "AUTO")
 	public void createEolicPlant(CityDTO message) {
 		PlantCreator plantCreator = new PlantCreator(topologicalConsumer, weatherConsumer, eoloPlantService, sender, message.id());
 		plantCreator.newPlant(message.city());

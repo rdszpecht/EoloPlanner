@@ -9,8 +9,8 @@ import { dirname } from 'path';
 
 import eoloPlantController from './controller/EoloPlantController.js';
 import * as db from './config/DBConnection.js';
-
-//import './queueHanderls/consumer.js';
+import './queueHanderls/consumer.js';
+import { configWebsockets } from './websockets/Websockets.js';
 
 var sequelize = db.sequelize;
 await db.initDatabase(sequelize);
@@ -18,9 +18,10 @@ await db.initDatabase(sequelize);
 // Construct a schema, using GraphQL schema language
 const schema = buildSchema(readFileSync(dirname(fileURLToPath(import.meta.url)) + '/eoloplants.graphqls').toString());
 
-const app = express();
+export const app = express();
 
 app.use(cors());
+configWebsockets(app);
 
 app.use('/graphql', graphqlHTTP({
   schema: schema,

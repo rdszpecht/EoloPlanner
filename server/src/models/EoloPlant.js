@@ -7,5 +7,6 @@ export class EoloPlant extends Model { }
 
 EoloPlant.init({
     city: { type: DataTypes.STRING },
+    progress: { type: DataTypes.INTEGER},
     planning: DataTypes.STRING
 }, { sequelize, modelName: 'eoloPlant' });

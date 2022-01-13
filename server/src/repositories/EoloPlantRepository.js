@@ -14,3 +14,7 @@ export async function createEoloPlant(plant){
     await EoloPlant.sync();
     return result;
 }
+
+export async function modifyEoloPlant(plant){
+    EoloPlant.update(plant, {where: {id: plant.id}});
+}

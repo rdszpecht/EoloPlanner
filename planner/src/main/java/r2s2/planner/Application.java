@@ -27,7 +27,7 @@ public class Application {
 
 	@Bean
 	public Queue eoloplantCreationRequestsQueue() {
-    	return new Queue("eoloplantCreationRequestsQueue", false);
+    	return new Queue("eoloplantCreationRequests", false);
 	}
 	
 	@Bean

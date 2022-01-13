@@ -1,24 +1,24 @@
 import * as eoloPlantRepository from '../repositories/EoloPlantRepository.js'
 import * as queueProducer from '../queueHanderls/producer.js'
 
-import * as topoService from '../services/TopoService.js';
-import * as weatherService from '../services/WeatherService.js'
-import * as eoloPlantService from '../services/EoloPlantService.js'
-
-var id = 0;
-
-async function getEoloPlants() {
+async function GetEoloPlants() {
     var result = await eoloPlantRepository.findAll();
     return result;
 };
 
 async function NewEoloPlant(data){
-    var message = { id, "city": data.city };
-    id++;
+    var plant = {
+        city: data.city,
+        progress: 0,
+        planning: null
+    }
+    plant = await eoloPlantRepository.createEoloPlant(plant);
+    var message = { id: plant.id, "city": data.city };
     queueProducer.sendMessage(message);
+    return plant;
 };
 
 export default {
-    getEoloPlants,
+    GetEoloPlants,
     NewEoloPlant
 }
