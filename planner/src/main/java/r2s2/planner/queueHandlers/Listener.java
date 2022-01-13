@@ -24,10 +24,10 @@ public class Listener {
 	@Autowired
 	EoloPlantService eoloPlantService;
 	
-	@RabbitListener(id = "newPlant", queues = "cities", ackMode = "AUTO")
-	public void createEolicPlant(String message) {
-		PlantCreator plantCreator = new PlantCreator(topologicalConsumer, weatherConsumer, eoloPlantService, sender);
-		plantCreator.newPlant(message);
+	@RabbitListener(id = "newPlant", queues = "eoloplantCreationRequestsQueue", ackMode = "AUTO")
+	public void createEolicPlant(CityDTO message) {
+		PlantCreator plantCreator = new PlantCreator(topologicalConsumer, weatherConsumer, eoloPlantService, sender, message.id());
+		plantCreator.newPlant(message.city());
 		
 	}
 

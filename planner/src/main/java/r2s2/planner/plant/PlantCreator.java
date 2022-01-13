@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import r2s2.planner.dataConsumers.TopologicalConsumer;
 import r2s2.planner.dataConsumers.WeatherConsumer;
+import r2s2.planner.queueHandlers.PlanningDTO;
 import r2s2.planner.queueHandlers.Sender;
 import r2s2.planner.service.EoloPlantService;
 
@@ -21,21 +22,24 @@ public class PlantCreator {
 	
 	private String plant;
 	private int progress;
+	private int id;
 	
 	
 	
 	public PlantCreator(TopologicalConsumer topologicalConsumer, WeatherConsumer weatherConsumer,
-			EoloPlantService eoloPlantService, Sender sender) {
+			EoloPlantService eoloPlantService, Sender sender, int id) {
 		super();
 		this.topologicalConsumer = topologicalConsumer;
 		this.weatherConsumer = weatherConsumer;
 		this.eoloPlantService = eoloPlantService;
 		this.sender = sender;
+		this.id = id;
 	}
 
 
 
 	public void newPlant(String city) {
+		
 		progress = 0;
 		
 		plant = city;
@@ -46,7 +50,7 @@ public class PlantCreator {
 					try {
 						plant += "-" + topologicalData.get();
 						progress += 25;
-						sender.sendProgress(progress);
+						sender.sendProgress(new PlanningDTO(this.id, city, progress, false, null));
 					} catch (Exception  e) {						
 						e.printStackTrace();
 					}
@@ -59,14 +63,14 @@ public class PlantCreator {
 					try {
 						plant += "-" + weatherData.get();		
 						progress += 25;
-						sender.sendProgress(progress);		
+						sender.sendProgress(new PlanningDTO(this.id, city, progress, false, null));	
 					} catch (Exception  e) {						
 						e.printStackTrace();
 					}				
 				});
 		
 		progress += 25;
-		sender.sendProgress(progress);
+		sender.sendProgress(new PlanningDTO(this.id, city, progress, false, null));
 		
 		CompletableFuture.allOf(topologicalData, weatherData).join();
 		
@@ -76,8 +80,7 @@ public class PlantCreator {
 					try {
 						plant = calculatedPlant.get();
 						progress += 25;
-						sender.sendProgress(progress);	
-						sender.sendPlant(plant);
+						sender.sendProgress(new PlanningDTO(this.id, city, progress, true, plant));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

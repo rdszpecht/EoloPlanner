@@ -11,12 +11,8 @@ public class Sender {
 	RabbitTemplate rabbitTemplate;
 	
 
-	public void sendProgress(int progress) {
-		rabbitTemplate.convertAndSend("progresses", progress);
-	}
-	
-	public void sendPlant(String plant) {
-		rabbitTemplate.convertAndSend("plants", plant);
+	public void sendProgress(PlanningDTO planning) {
+		rabbitTemplate.convertAndSend("eoloplantCreationProgressNotifications", planning);
 	}
 	
 }
