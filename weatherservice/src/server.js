@@ -10,3 +10,7 @@ server.bindAsync('127.0.0.1:9090', grpc.ServerCredentials.createInsecure(), () =
     server.start();
 });
 
+process.on('SIGINT', () => {
+    process.exit(0);
+});
+
