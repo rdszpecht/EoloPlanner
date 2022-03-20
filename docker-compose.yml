@@ -1,7 +1,8 @@
 version: "3.9"
 services:
   planner:
-    image: rsotosan/eoloplanner:1.0
+    # image: rsotosan/eoloplanner:1.0
+    image: rdszpecht/eoloplanner:1.0
     environment:
       - RABBITMQ_HOST=rabbit
       - RABBITMQ_PORT=5672
@@ -13,14 +14,16 @@ services:
       - weatherservice
 
   weatherservice:
-    image: rsotosan/weatherservice:1.0
+    # image: rsotosan/weatherservice:1.0
+    image: rdszpecht/weatherservice:1.0
     depends_on: 
       - toposervice
     ports:
       - 9090:9090
 
   toposervice:
-    image: rsotosan/toposervice:1.0
+    # image: rsotosan/toposervice:1.0
+    image: rdszpecht/toposervice:1.0
     environment:
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
@@ -28,7 +31,8 @@ services:
       - mongodb
 
   server:
-    image: rsotosan/server:1.0
+    # image: rsotosan/server:1.0
+    image: rdszpecht/server:1.0
     ports: 
       - 3000:3000
     environment:
