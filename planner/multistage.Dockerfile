@@ -28,4 +28,4 @@ COPY --from=builder /project/target/*.jar /usr/src/app/
 EXPOSE 8081
 
 # Comando que se ejecuta al hacer docker run
-CMD [ "java", "-jar", "eoloplanner-1.0.jar" ]
+CMD [ "java", "-jar", "planner-0.0.1-SNAPSHOT.jar" ]

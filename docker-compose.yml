@@ -1,0 +1,56 @@
+version: "3.9"
+services:
+  planner:
+    image: rsotosan/eoloplanner:1.0
+    environment:
+      - RABBITMQ_HOST=rabbit
+      - RABBITMQ_PORT=5672
+      - TOPO_HOST=toposervice
+      - TOPO_PORT=8080
+      - WEATHER_HOST=weatherservice
+      - WEATHER_PORT=9090
+    depends_on: 
+      - weatherservice
+
+  weatherservice:
+    image: rsotosan/weatherservice:1.0
+    depends_on: 
+      - toposervice
+    ports:
+      - 9090:9090
+
+  toposervice:
+    image: rsotosan/toposervice:1.0
+    environment:
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+    depends_on: 
+      - mongodb
+
+  server:
+    image: rsotosan/server:1.0
+    ports: 
+      - 3000:3000
+    environment:
+      - MYSQL_HOST=mysqldb
+      - MYSQL_PORT=3306
+      - RABBITMQ_HOST=rabbit  
+    command: bash -c "
+      ./wait-for-it.sh rabbit:5672 --
+      ./wait-for-it.sh mysqldb:3306 --
+      node src/server.js"
+    depends_on: 
+      - rabbit
+      - mysqldb
+
+  mysqldb:
+    image: mysql:8.0.22
+    environment:
+      - MYSQL_DATABASE=eoloplantsDB
+      - MYSQL_ROOT_PASSWORD=password
+
+  mongodb:
+    image: mongo:5.0.6
+
+  rabbit:
+    image: rabbitmq:3-management

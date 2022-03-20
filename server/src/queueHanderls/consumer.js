@@ -5,12 +5,14 @@ import * as eoloPlantService from '../services/EoloPlantService.js'
 let channel = null;
 let queue = 'eoloplantCreationProgressNotifications';
 
+const rabbitmqHost = process.env.RABBITMQ_HOST || "localhost";
+
 process.on('exit', (code) => {
     channel.close();
     console.log(`Closing rabbitmq channel`);
 });
 
-const rabbitClient = await connect('amqp://guest:guest@localhost');
+const rabbitClient = await connect('amqp://guest:guest@' + rabbitmqHost);
 
 channel = await rabbitClient.createChannel();
 
