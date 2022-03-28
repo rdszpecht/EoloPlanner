@@ -7,7 +7,7 @@
         getPlants();
         function getPlants(){
             $('#EolicPlantsDiv').empty();
-            $.post('http://localhost:3000/graphql', {
+            $.post('http://' + window.location.host + '/graphql', {
             "query": "query {GetEoloPlants{id,city,planning}}"
          }, (res) => {
             res.data.GetEoloPlants.forEach(element => {
@@ -21,7 +21,7 @@
         }
         
         function openSocketConnection(city){
-            var socket = new WebSocket("ws://localhost:3000/notifications");
+            var socket = new WebSocket("ws://" + window.location.host + "/notifications");
             socket.onopen = function(event){
                 socket.send(city);
             }
@@ -47,7 +47,7 @@
             var city = document.plant_form.city.value;
             var query = "mutation {NewEoloPlant(city: \"" + city + "\"){id,city,planning}}";
             openSocketConnection(city)
-            $.post('http://localhost:3000/graphql', {
+            $.post('http://' + window.location.host + '/graphql', {
             "query": query
             }, (res) => {
                 if(res.errors == undefined){
