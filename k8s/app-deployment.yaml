@@ -140,7 +140,7 @@ spec:
 kind: Service 
 apiVersion: v1 
 metadata:
-  name: server
+  name: serverservice
 spec:
   type: NodePort
   selector:
